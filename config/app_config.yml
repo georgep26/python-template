@@ -1,5 +1,5 @@
 # Application Configuration
-# This file contains configuration settings for the application
+# This file contains configuration settings for the application, including logging configuration
 
 app:
   name: "python-template-project"
@@ -23,6 +23,42 @@ aws:
   region: "us-east-1"
   s3_bucket: "template-bucket"
   dynamodb_table: "template-table"
+
+# Logging Configuration
+logging:
+  version: 1
+  disable_existing_loggers: false
+  
+  formatters:
+    standard:
+      format: '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+    detailed:
+      format: '%(asctime)s [%(levelname)s] %(name)s:%(lineno)d: %(message)s'
+  
+  handlers:
+    console:
+      class: logging.StreamHandler
+      level: INFO
+      formatter: standard
+      stream: ext://sys.stdout
+    
+    file:
+      class: logging.handlers.RotatingFileHandler
+      level: DEBUG
+      formatter: detailed
+      filename: logs/app.log
+      maxBytes: 10485760  # 10MB
+      backupCount: 5
+  
+  root:
+    level: INFO
+    handlers: [console, file]
+  
+  loggers:
+    app:
+      level: DEBUG
+      handlers: [console, file]
+      propagate: false
 
 # Environment-specific overrides
 environments:
